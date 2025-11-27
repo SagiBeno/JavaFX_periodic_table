@@ -1,14 +1,17 @@
 package org.example.periodictable;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.Initializable;
 
-public class PeriodicTableController {
-    @FXML
-    private Label welcomeText;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+public class PeriodicTableController implements Initializable {
+
+    public static ArrayList<Element> elementsArray = new ArrayList<>();
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        elementsArray = LoadFromCSV.filereader("periodic-table-data.csv");
     }
 }
