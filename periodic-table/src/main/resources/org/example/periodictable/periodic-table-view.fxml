@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
 
-
-<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.periodictable.PeriodicTableController">
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.periodictable.PeriodicTableController">
   <children>
-    <GridPane fx:id="periodicGrid" alignment="BOTTOM_LEFT" hgap="5" minHeight="300.0" style="-fx-background-color: #f0f0f0;" vgap="5">
+    <GridPane fx:id="periodicGrid" alignment="CENTER" hgap="5" minHeight="300.0" style="-fx-background-color: #f0f0f0;" vgap="5">
       <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
       </padding>
-
-
     </GridPane>
   </children>
 </VBox>
