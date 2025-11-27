@@ -12,7 +12,7 @@ public class PeriodicTableApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(PeriodicTableApplication.class.getResource("periodic-table-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        stage.setTitle("Periodic table");
         stage.setScene(scene);
         stage.show();
     }
