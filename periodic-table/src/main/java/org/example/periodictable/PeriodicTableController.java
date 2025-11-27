@@ -38,6 +38,10 @@ public class PeriodicTableController implements Initializable {
             return "#" + hex.charAt(1) + hex.charAt(1) + hex.charAt(2) + hex.charAt(2) + hex.charAt(3) + hex.charAt(3);
         }
 
+        if (hex.length() == 5) {
+            return "#" + hex.charAt(1) + hex.charAt(1) + hex.charAt(2) + hex.charAt(2) + hex.charAt(3) + hex.charAt(3) + hex.charAt(4) + hex.charAt(4);
+        }
+
         if (hex.length() == 7) return hex;
         else return "#000000";
     }
