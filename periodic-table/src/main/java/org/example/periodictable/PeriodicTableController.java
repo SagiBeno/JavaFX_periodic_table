@@ -2,20 +2,25 @@ package org.example.periodictable;
 
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
+import javafx.animation.KeyValue;
 import javafx.animation.ScaleTransition;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -137,9 +142,11 @@ public class PeriodicTableController implements Initializable {
                         }
 
                         StackPane stackPane = new StackPane();
+
                         stackPane.getChildren().add(rectangle);
                         stackPane.getChildren().add(name);
                         stackPane.getChildren().add(symbol);
+                        stackPane.setOnMouseClicked(event -> openDialog(element));
 
                         GridPane.setRowIndex(stackPane, row);
                         GridPane.setColumnIndex(stackPane, column);
@@ -159,5 +166,54 @@ public class PeriodicTableController implements Initializable {
     @FXML public void search() {
         searchString = searchTextField.getText().toLowerCase();
         drawPeriodicTable();
+    }
+
+    @FXML public void openDialog (Element element) {
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle(element.getName() + " details");
+
+        Label title = new Label();
+        title.setText(element.getName() + " (" + element.getSymbol() + ") ");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        TableView<PropertyRow> table = new TableView<>();
+
+        TableColumn<PropertyRow, String> col1 = new TableColumn<>("Property");
+        col1.setCellValueFactory(new PropertyValueFactory<>("key"));
+        TableColumn<PropertyRow, String> col2 = new TableColumn<>("Value");
+        col2.setCellValueFactory(new PropertyValueFactory<>("value"));
+
+        table.getColumns().addAll(col1, col2);
+
+        ObservableList<PropertyRow> rows = FXCollections.observableArrayList();
+
+        rows.add(new PropertyRow("Atomic number", String.valueOf(element.getAtomicNumber())));
+        if (!element.getAtomicMass().isEmpty()) rows.add(new PropertyRow("Atomic mass", element.getAtomicMass()));
+        if (!element.getElectronicConfiguration().isEmpty()) rows.add(new PropertyRow("Electronic Configuration", element.getElectronicConfiguration()));
+        if (!element.getElectronegativity().isEmpty()) rows.add(new PropertyRow("Electronegravity", element.getElectronegativity()));
+        if (!element.getElectronAffinity().isEmpty()) rows.add(new PropertyRow("Electron affinity", element.getElectronAffinity()));
+        if (!element.getAtomicRadius().isEmpty()) rows.add(new PropertyRow("Atomic radius", element.getAtomicRadius()));
+        if (!element.getIonRadius().isEmpty()) rows.add(new PropertyRow("ION radius", element.getIonRadius()));
+        if (!element.getIonizationEnergy().isEmpty()) rows.add(new PropertyRow("Ionization energy", element.getIonizationEnergy()));
+        if (!element.getVanDelWaalsRadius().isEmpty()) rows.add(new PropertyRow("Van Del Waals Radius", element.getVanDelWaalsRadius()));
+        if (!element.getOxidationStates().isEmpty()) rows.add(new PropertyRow("Oxidation states", element.getOxidationStates()));
+        if (!element.getStandardState().isEmpty()) rows.add(new PropertyRow("Standard state", element.getStandardState()));
+        if (!element.getBondingType().isEmpty()) rows.add(new PropertyRow("Bonding type", element.getBondingType()));
+        if (!element.getMeltingPoint().isEmpty()) rows.add(new PropertyRow("Melting point", element.getMeltingPoint()));
+        if (!element.getBoilingPoint().isEmpty()) rows.add(new PropertyRow("Boiling point", element.getBoilingPoint()));
+        if (!element.getDensity().isEmpty()) rows.add(new PropertyRow("Density", element.getDensity()));
+        if (!element.getGroupBlock().isEmpty()) rows.add(new PropertyRow("Group block", element.getGroupBlock()));
+        if (!element.getYearDiscovered().isEmpty()) rows.add(new PropertyRow("Year discovered", element.getYearDiscovered()));
+
+        table.getItems().addAll(rows);
+
+        VBox container = new VBox();
+        container.getChildren().add(title);
+        container.getChildren().add(table);
+
+        Scene scene = new Scene(container);
+        dialog.setScene(scene);
+        dialog.showAndWait();
+
     }
 }
