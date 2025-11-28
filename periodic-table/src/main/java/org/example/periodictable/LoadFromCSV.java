@@ -17,10 +17,10 @@ public class LoadFromCSV {
 
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
-                String[] parts = line.split(",");
+                String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
                 int atomicNumber = Integer.parseInt(parts[0]);
-                String symbol = parts[1].trim();
+                String symbol = parts[1];
                 String name = parts[2].trim();
                 String atomicMass = parts[3].trim();
                 String cpkHexColor = parts[4].trim();
