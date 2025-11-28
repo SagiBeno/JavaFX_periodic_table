@@ -15,15 +15,15 @@ public class PropertyRow {
     }
 
     public void setKey(String key) {
-        this.key.set(key);
+        this.key = new SimpleStringProperty(key);
     }
 
     public void setValue(String value) {
-        this.value.set(value);
+        this.value = new SimpleStringProperty(value);
     }
 
     public PropertyRow(String key, String value) {
-        this.key = new SimpleStringProperty(key);
-        this.value = new SimpleStringProperty(value);
+        this.setKey(key);
+        this.setValue(value);
     }
 }

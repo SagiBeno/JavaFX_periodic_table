@@ -32,9 +32,10 @@ public class PeriodicTableController implements Initializable {
     public static ArrayList<Element> elementsArray = new ArrayList<>();
     public String searchString = "";
     public String filterString = "all";
+    public static boolean isRunningTest = false;
     @FXML public GridPane periodicGrid;
     @FXML public TextField searchTextField;
-    @FXML public ComboBox comboBox;
+    @FXML public ComboBox<String> comboBox;
 
     public static int[][] periodicTableLayout = {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
@@ -195,10 +196,10 @@ public class PeriodicTableController implements Initializable {
             }
         }
 
-        comboBox.getItems().addAll(comboBoxOptions);
-        comboBox.setValue("All");
+        if (!isRunningTest) comboBox.getItems().addAll(comboBoxOptions);
+        if (!isRunningTest) comboBox.setValue("All");
 
-        drawPeriodicTable();
+        if (!isRunningTest) drawPeriodicTable();
     }
 
     @FXML public void search() {
@@ -252,7 +253,6 @@ public class PeriodicTableController implements Initializable {
         Scene scene = new Scene(container);
         dialog.setScene(scene);
         dialog.showAndWait();
-
     }
 
     public void comboBoxFilter() {
