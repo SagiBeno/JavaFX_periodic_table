@@ -38,7 +38,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <ComboBox prefWidth="150.0">
+                  <ComboBox fx:id="comboBox" onAction="#comboBoxFilter" prefWidth="150.0" promptText="Choose an option">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>

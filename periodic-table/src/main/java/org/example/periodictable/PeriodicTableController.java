@@ -31,8 +31,10 @@ public class PeriodicTableController implements Initializable {
 
     public static ArrayList<Element> elementsArray = new ArrayList<>();
     public String searchString = "";
+    public String filterString = "all";
     @FXML public GridPane periodicGrid;
     @FXML public TextField searchTextField;
+    @FXML public ComboBox comboBox;
 
     public static int[][] periodicTableLayout = {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
@@ -81,24 +83,51 @@ public class PeriodicTableController implements Initializable {
                 for (Element element : elementsArray) {
 
                     if (periodicTableLayout[row][column] == element.getAtomicNumber()) {
+                        Label atomicNumber = new Label();
                         Label name = new Label();
-                        name.setText(element.getName());
-                        name.setStyle("-fx-font-size: 10px;");
-                        name.setWrapText(true);
-                        GridPane.setRowIndex(name, 1);
-
                         Label symbol = new Label();
-                        symbol.setText(element.getSymbol());
-                        symbol.setTranslateY(-12.0);
-                        symbol.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
-
                         Rectangle rectangle = new Rectangle();
-                        rectangle.setArcHeight(8.0);
-                        rectangle.setArcWidth(8.0);
-                        rectangle.setHeight(50);
-                        rectangle.setWidth(60);
-                        rectangle.setStroke(Paint.valueOf("BLACK"));
-                        rectangle.setStrokeType(StrokeType.valueOf("OUTSIDE"));
+                        StackPane stackPane = new StackPane();
+
+                        if (filterString.equalsIgnoreCase("all")) {
+                            name.setText(element.getName());
+                            symbol.setText(element.getSymbol());
+                            name.setStyle("-fx-font-size: 10px;");
+                            name.setWrapText(true);
+                            GridPane.setRowIndex(name, 1);
+
+                            symbol.setTranslateY(-12.0);
+                            symbol.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+
+                            rectangle.setArcHeight(8.0);
+                            rectangle.setArcWidth(8.0);
+                            rectangle.setHeight(50);
+                            rectangle.setWidth(60);
+                            rectangle.setStroke(Paint.valueOf("BLACK"));
+                            rectangle.setStrokeType(StrokeType.valueOf("OUTSIDE"));
+                            GridPane.setRowIndex(stackPane, row);
+                            GridPane.setColumnIndex(stackPane, column);
+                        }
+
+                        if (!filterString.equalsIgnoreCase("all") && filterString.equalsIgnoreCase(element.getGroupBlock())) {
+                            name.setText(element.getName());
+                            symbol.setText(element.getSymbol());
+                            name.setStyle("-fx-font-size: 10px;");
+                            name.setWrapText(true);
+                            GridPane.setRowIndex(name, 1);
+
+                            symbol.setTranslateY(-12.0);
+                            symbol.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+
+                            rectangle.setArcHeight(8.0);
+                            rectangle.setArcWidth(8.0);
+                            rectangle.setHeight(50);
+                            rectangle.setWidth(60);
+                            rectangle.setStroke(Paint.valueOf("BLACK"));
+                            rectangle.setStrokeType(StrokeType.valueOf("OUTSIDE"));
+                            GridPane.setRowIndex(stackPane, row);
+                            GridPane.setColumnIndex(stackPane, column);
+                        }
 
                         if (!searchString.isEmpty()) {
                             String nameToLower = element.getName().toLowerCase();
@@ -141,15 +170,11 @@ public class PeriodicTableController implements Initializable {
                             rectangle.setFill(Paint.valueOf("WHITE"));
                         }
 
-                        StackPane stackPane = new StackPane();
-
                         stackPane.getChildren().add(rectangle);
                         stackPane.getChildren().add(name);
                         stackPane.getChildren().add(symbol);
                         stackPane.setOnMouseClicked(event -> openDialog(element));
 
-                        GridPane.setRowIndex(stackPane, row);
-                        GridPane.setColumnIndex(stackPane, column);
                         periodicGrid.getChildren().add(stackPane);
                     }
                 }
@@ -160,6 +185,19 @@ public class PeriodicTableController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         elementsArray = LoadFromCSV.filereader("periodic-table-data.csv");
+        ArrayList<String> comboBoxOptions = new ArrayList<>();
+        comboBoxOptions.add("All");
+
+        for (Element element : elementsArray) {
+
+            if (!element.getGroupBlock().isEmpty() && !comboBoxOptions.contains(element.getGroupBlock())) {
+                comboBoxOptions.add(element.getGroupBlock());
+            }
+        }
+
+        comboBox.getItems().addAll(comboBoxOptions);
+        comboBox.setValue("All");
+
         drawPeriodicTable();
     }
 
@@ -215,5 +253,10 @@ public class PeriodicTableController implements Initializable {
         dialog.setScene(scene);
         dialog.showAndWait();
 
+    }
+
+    public void comboBoxFilter() {
+        filterString = comboBox.getValue().toString();
+        drawPeriodicTable();
     }
 }
