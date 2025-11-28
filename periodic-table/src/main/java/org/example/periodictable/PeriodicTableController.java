@@ -1,14 +1,22 @@
 package org.example.periodictable;
 
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.ScaleTransition;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +25,9 @@ import java.util.ResourceBundle;
 public class PeriodicTableController implements Initializable {
 
     public static ArrayList<Element> elementsArray = new ArrayList<>();
+    public String searchString = "";
+    @FXML public GridPane periodicGrid;
+    @FXML public TextField searchTextField;
 
     public static int[][] periodicTableLayout = {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
@@ -55,8 +66,6 @@ public class PeriodicTableController implements Initializable {
         return luminance < 128;
     }
 
-    @FXML public GridPane periodicGrid;
-
     public void drawPeriodicTable() {
         periodicGrid.getChildren().clear();
 
@@ -82,9 +91,38 @@ public class PeriodicTableController implements Initializable {
                         rectangle.setArcHeight(8.0);
                         rectangle.setArcWidth(8.0);
                         rectangle.setHeight(50);
+                        rectangle.setWidth(60);
                         rectangle.setStroke(Paint.valueOf("BLACK"));
                         rectangle.setStrokeType(StrokeType.valueOf("OUTSIDE"));
-                        rectangle.setWidth(60);
+
+                        if (!searchString.isEmpty()) {
+                            String nameToLower = element.getName().toLowerCase();
+                            String symbolToLower = element.getSymbol().toLowerCase();
+
+                            if (nameToLower.contains(searchString) || symbolToLower.contains(searchString)) {
+                                DropShadow dropShadow = new DropShadow();
+                                dropShadow.setRadius(5.0);
+                                dropShadow.setOffsetX(3.5);
+                                dropShadow.setOffsetY(3.5);
+                                dropShadow.setColor(Color.RED);
+
+                                ScaleTransition scale = new ScaleTransition();
+                                scale.setNode(rectangle);
+                                scale.setDuration(Duration.millis(900));
+                                scale.setInterpolator(Interpolator.LINEAR);
+
+                                scale.setFromX(1.0);
+                                scale.setFromY(1.0);
+                                scale.setToX(1.05);
+                                scale.setToY(1.05);
+
+                                scale.setCycleCount(Animation.INDEFINITE);
+                                scale.setAutoReverse(true);
+                                scale.play();
+
+                                rectangle.setEffect(dropShadow);
+                            }
+                        }
 
                         if (!element.getCpkHexColor().isEmpty() && !element.getCpkHexColor().equals("0.00E+00")) {
                             String hexColor = "#" + element.getCpkHexColor();
@@ -116,6 +154,10 @@ public class PeriodicTableController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         elementsArray = LoadFromCSV.filereader("periodic-table-data.csv");
         drawPeriodicTable();
+    }
 
+    @FXML public void search() {
+        searchString = searchTextField.getText().toLowerCase();
+        drawPeriodicTable();
     }
 }
